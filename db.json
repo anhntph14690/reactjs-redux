@@ -1,0 +1,10 @@
+{
+  "products": [
+    {
+      "img": "http://res.cloudinary.com/ecommercer2021/image/upload/v1664334760/dqrdz3m9bt4e6b3hbvat.jpg",
+      "name": "Product 4",
+      "price": "10000",
+      "id": 2
+    }
+  ]
+}
