@@ -9,10 +9,7 @@ type Props = {
     products: IProduct[];
     onRemove: (id: string | undefined) => void
 }
-// type ProductList = {
-//     products: IProduct[];
-//     onRemove: (id: number | undefined) => void
-// }
+
 const List = (props: Props) => {
 
     const products = useSelector((state: any) => state.product.products)
@@ -24,12 +21,10 @@ const List = (props: Props) => {
     // const navigate = useNavigate();
 
     const onRemove = (id: any) => {
-
         const confirm = window.confirm("Ban co chac chan muon xoa khong")
         if (confirm) {
             dispatch(removeProduct(id))
             // navigate("/")
-
         }
     }
     
@@ -56,7 +51,7 @@ const List = (props: Props) => {
                                 </tr>
                             </thead>
                             <tbody className="table-border-bottom-0">
-                                {products.data?.map((item: any, index: number) => {
+                                {products?.map((item: any, index: number) => {
                                     return <tr>
                                         <td>
                                             <strong>{index + 1}</strong>

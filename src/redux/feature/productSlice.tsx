@@ -15,23 +15,22 @@ const initialState: IProductState = {
 }
 
 
-export const addProduct = createAsyncThunk("product/add", async (product: any) => {
+export const addProduct = createAsyncThunk("product/add", async (product: IProduct) => {
     const res = await add(product)
-    return res;
+    return res.data; 
 })
 export const listProducts = createAsyncThunk("product/list", async () => {
     const res = await list()
-    return res;
+    return res.data;
 })
-export const readProduct = createAsyncThunk("product/read", async (id: any) => {
+export const readProduct = createAsyncThunk("product/read", async (id: number) => {
     const res = await read(id)
-    return res;
+    return res.data;
 })
-export const removeProduct = createAsyncThunk("product/remove", async (id: any) => {
-    const res = await remove(id);
-    return res
+export const removeProduct = createAsyncThunk("product/remove", async (id: number) => {
+    await remove(id);
 })
-export const updateProduct = createAsyncThunk("product/update", async (product: any) => {
+export const updateProduct = createAsyncThunk("product/update", async (product: IProduct) => {
     const res = await update(product);
     return res
 })
@@ -41,7 +40,7 @@ const productSlice = createSlice({
     reducers: {},
     extraReducers: (build) => {
             build.addCase(addProduct.fulfilled, (state, { payload }) => {
-                state.products.push(payload as any)
+                state.products.push(payload as IProduct)
             }),
             build.addCase(listProducts.fulfilled, (state, { payload }) => {
                 state.products = payload as any
@@ -55,6 +54,7 @@ const productSlice = createSlice({
             build.addCase(updateProduct.fulfilled, (state, {payload}) => {
                 // const user = action.payload
                 state.product = payload as any
+                console.log(payload)
             });
     }
 })

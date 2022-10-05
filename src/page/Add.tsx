@@ -7,10 +7,10 @@ import {useDispatch } from 'react-redux'
 import { addProduct } from '../redux/feature/productSlice';
 
 
-type ProductAddProps = {
-    name: string,
-    onAdd: (product: TypeInputs) => void
-};
+// type ProductAddProps = {
+//     name: string,
+//     onAdd: (product: TypeInputs) => void
+// };
 type TypeInputs = {
     name: string,
     price: number,
@@ -18,16 +18,16 @@ type TypeInputs = {
 }
 type EventChange = any
 
-const Add = (props: ProductAddProps) => {
+const Add = () => {
     const dispatch = useDispatch<any>();
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const { register, handleSubmit, formState: { errors } } = useForm<TypeInputs>()
     const [url, setUrl] = useState<string>('');
     const navigate = useNavigate();
 
-    const onAdd: SubmitHandler<any> = async (product: IProduct) => {
+    const onAdd: SubmitHandler<TypeInputs> = async (product: TypeInputs) => {
         try {
             product.img = url;
-            
+
             await dispatch(addProduct(product))
             alert("Add Product thành công!")
             navigate("/")
@@ -54,10 +54,10 @@ const Add = (props: ProductAddProps) => {
         }).then((res) => {
             //  reset({img: res.data.url});
             setUrl(res.data.url);
+            console.log(formData);
         });
     }
     const imgField = register('img', { required: true });
-
 
     return (
         <div>
@@ -68,7 +68,6 @@ const Add = (props: ProductAddProps) => {
                         <div className="card mb-4">
                             <div className="card-body">
                                 <form onSubmit={handleSubmit(onAdd)}>
-                                    {props.name}
                                     <div className="mb-3">
                                         <label className="form-label" htmlFor="basic-default-fullname">Name</label>
                                         <input type="text" className="form-control" id="basic-default-fullname" placeholder="name" {...register('name', { required: true, minLength: 5 })} />

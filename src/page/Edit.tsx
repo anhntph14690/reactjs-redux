@@ -1,95 +1,131 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { read } from '../api/products'
-import { IProduct } from '../models/products'
-import { listProducts, readProduct } from '../redux/feature/productSlice'
+import axios from 'axios';
+import { useEffect, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useNavigate, useParams } from 'react-router-dom';
+import { IProduct } from '../models/products';
+import {useDispatch } from 'react-redux'
+import { addProduct } from '../redux/feature/productSlice';
+import { read } from '../api/products';
 
-type ProductEditProps = {
-    onUpdate: (product: IProduct) => void
-}
 
-type FromInputs = {
+// type ProductAddProps = {
+//     name: string,
+//     onAdd: (product: TypeInputs) => void
+// };
+type TypeInputs = {
     name: string,
-    img: string,
-    price: number
+    price: number,
+    img: string
 }
 type EventChange = any
 
-const Edit = (props: ProductEditProps) => {
+const Edit = () => {
+    const dispatch = useDispatch<any>();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<TypeInputs>()
+    const [url, setUrl] = useState<string>('');
+    const navigate = useNavigate();
+    const {id} = useParams()
 
+    useEffect(() => {
+        const getOneProduct = async () => {
+            const {data} = await read(id)
+            // console.log(data)
+            setUrl(data.img)
+            reset(data)
+        }
+        getOneProduct()
+    }, [])
 
-    // const categorys = useSelector((state: any) => state.category.categorys)
-    // const productx = useSelector((state: any) => state.product.product)
-    // // const router = useRouter()
-    // // const id = router.query.id
-    // const dispatch = useDispatch<any>();
-    // const { register, handleSubmit, formState: { errors }, reset } = useForm()
-    // const CLOUDINARY_API = "https://api.cloudinary.com/v1_1/hait-10/image/upload";
-    // const CLOUDINARY_PRESET = "gsixsix";
-    // const onAdd: SubmitHandler<any> = async (product: IProduct) => {
-    //     try {
-    //         product.img = url;
+    const onAdd: SubmitHandler<TypeInputs> = async (product: TypeInputs) => {
+        try {
+            product.img = url;
 
-    //         await dispatch(updateProduct(product))
-    //         alert("Thành công")
-    //     } catch (error) {
-    //         console.log(error);
+            await dispatch(addProduct(product))
+            alert("Add Product thành công!")
+            navigate("/")
 
-    //     }
-    // }
-    // useEffect(() => {
-    //     (async () => {
-    //         const productz = await dispatch(listProducts(id))
-    //         reset(productz.payload?.data)
+        } catch (error) {
+            console.log(error);
 
-    //         console.log("a", productz);
+        }
+    }
 
-    //     })()
+    const imgProduct = (event: EventChange) => {
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "jkbdphzy");
 
-
-    //     dispatch(updateProduct())
-    //     console.log(categorys);
-
-    // }, [dispatch, reset])
-
-    // let imageload = ""
-    // const onSubmit: SubmitHandler<FromInputs> = async data => {
-    //     // console.log(data)
-    //     console.log(data.img[0]);
-    //     if (data.img[0] != "h") {
-    //         const file = data.img[0];
-    //         const formData = new FormData();
-    //         formData.append("file", file);
-    //         formData.append("upload_preset", "jkbdphzy");
-
-    //         const { data: newImage } = await axios({
-    //             url: "https://api.cloudinary.com/v1_1/ecommercer2021/image/upload",
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/x-www-formendcoded",
-    //             },
-    //             data: formData,
-    //         })
-    //         imageload = newImage.url
-    //         data.img = imageload
-    //         props.onUpdate(data);
-    //         navigate("/")
-
-
-    //     } else {
-    //         navigate("/")
-    //         console.log('abc')
-
-    //     }
-
-    // }
+        axios({
+            url: "https://api.cloudinary.com/v1_1/ecommercer2021/image/upload",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-formendcoded",
+            },
+            data: formData,
+        }).then((res) => {
+            //  reset({img: res.data.url});
+            setUrl(res.data.url);
+            console.log(formData);
+        });
+    }
+    const imgField = register('img', { required: true });
 
     return (
         <div>
-            
+            <div className="container-xxl flex-grow-1 container-p-y">
+
+                <div className="row">
+                    <div className="col-xl">
+                        <div className="card mb-4">
+                            <div className="card-body">
+                                <form onSubmit={handleSubmit(onAdd)}>
+                                    <div className="mb-3">
+                                        <label className="form-label" htmlFor="basic-default-fullname">Name</label>
+                                        <input type="text" className="form-control" id="basic-default-fullname" placeholder="name" {...register('name', { required: true, minLength: 5 })} />
+                                    </div>
+                                    {Object.keys(errors).length !== 0 && (
+                                        <ul className='text-red-500'>
+                                            {errors.name?.type == 'required' && <li>Nhập</li>}
+                                        </ul>
+                                    )}
+
+                                    <div className="mb-3">
+                                        <label className="form-label" htmlFor="basic-default-fullname">Photo Product</label>
+                                        {/* {console.log(url)} */}
+                                        <input type="file" className="form-control" id="basic-default-fullname" {...register('img', { required: true })}  {...imgField} onChange={(e) => { imgField.onChange(e); imgProduct(e) }} />
+                                        {url && <img src={url} width='50px' />}
+                                    </div>
+                                    {Object.keys(errors).length !== 0 && (
+                                        <ul className='text-red-500'>
+                                            {errors.img?.type == 'required' && <li>Nhập</li>}
+                                        </ul>
+                                    )}
+
+                                    <div className="mb-3">
+                                        <label className="form-label" htmlFor="basic-default-email">Price</label>
+                                        <div className="input-group input-group-merge">
+                                            <input type="text" id="basic-default-email" className="form-control" placeholder="price" {...register('price', { required: true })} />
+                                            {/* <span className="input-group-text" id="basic-default-email2">$</span> */}
+                                        </div>
+                                    </div>
+                                    {Object.keys(errors).length !== 0 && (
+                                        <ul className='text-red-500'>
+                                            {errors.price?.type == 'required' && <li className='text-red-500'>Nhập</li>}
+                                        </ul>
+                                    )}
+
+                                    {/* <div className="mb-3">
+                                    <label className="form-label" htmlFor="basic-default-message">desc</label>
+                                    <textarea id="basic-default-message" className="form-control" placeholder="Hi, Do you have a moment to talk Joe?" defaultValue={""} />
+                                </div> */}
+                                    <button className="btn btn-primary">Add</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
