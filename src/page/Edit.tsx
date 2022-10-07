@@ -4,7 +4,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { IProduct } from '../models/products';
 import {useDispatch } from 'react-redux'
-import { addProduct } from '../redux/feature/productSlice';
+import { addProduct, updateProduct } from '../redux/feature/productSlice';
 import { read } from '../api/products';
 
 
@@ -39,9 +39,9 @@ const Edit = () => {
     const onAdd: SubmitHandler<TypeInputs> = async (product: TypeInputs) => {
         try {
             product.img = url;
-
-            await dispatch(addProduct(product))
-            alert("Add Product thành công!")
+            console.log(url);
+            await dispatch(updateProduct(product))
+            alert("Edit Product thành công!")
             navigate("/")
 
         } catch (error) {

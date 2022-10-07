@@ -27,7 +27,6 @@ const Add = () => {
     const onAdd: SubmitHandler<TypeInputs> = async (product: TypeInputs) => {
         try {
             product.img = url;
-
             await dispatch(addProduct(product))
             alert("Add Product thành công!")
             navigate("/")

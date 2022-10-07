@@ -19,16 +19,12 @@
       "id": 3
     },
     {
-      "img": "http://res.cloudinary.com/ecommercer2021/image/upload/v1664901891/t0gutel9wamljgxhhxzu.jpg",
-      "name": "Product 4",
+      "img": {
+        "0": {}
+      },
+      "name": "wnadssaxas888saxs",
       "price": "10000",
       "id": 4
-    },
-    {
-      "img": "http://res.cloudinary.com/ecommercer2021/image/upload/v1664901908/zfaaeif6dhtmf6dhet2a.jpg",
-      "name": "Product 4 Update",
-      "price": "10000",
-      "id": 5
     }
   ]
 }

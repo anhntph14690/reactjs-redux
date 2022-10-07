@@ -5,12 +5,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { removeProduct, listProducts } from '../redux/feature/productSlice';
 
 
-type Props = {
-    products: IProduct[];
-    onRemove: (id: string | undefined) => void
-}
 
-const List = (props: Props) => {
+const List = () => {
 
     const products = useSelector((state: any) => state.product.products)
     const dispatch = useDispatch<any>()
