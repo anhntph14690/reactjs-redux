@@ -69,7 +69,7 @@ const Edit = () => {
             console.log(formData);
         });
     }
-    const imgField = register('img', { required: true });
+    const imgField = register('img', { required: false });
 
     return (
         <div>
@@ -93,7 +93,7 @@ const Edit = () => {
                                     <div className="mb-3">
                                         <label className="form-label" htmlFor="basic-default-fullname">Photo Product</label>
                                         {/* {console.log(url)} */}
-                                        <input type="file" className="form-control" id="basic-default-fullname" {...register('img', { required: true })}  {...imgField} onChange={(e) => { imgField.onChange(e); imgProduct(e) }} />
+                                        <input type="file" className="form-control" id="basic-default-fullname" {...register('img')}  {...imgField} onChange={(e) => { imgField.onChange(e); imgProduct(e) }} />
                                         {url && <img src={url} width='50px' />}
                                     </div>
                                     {Object.keys(errors).length !== 0 && (
